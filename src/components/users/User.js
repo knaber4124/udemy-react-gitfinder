@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Spinner from '../layout/Spinner/Spinner';
+import Repos from '../Repos/Repos';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -8,16 +9,19 @@ export class User extends Component {
         loading: PropTypes.bool,
         user: PropTypes.object.isRequired,
         getUser: PropTypes.func.isRequired,
+        getUserRepo: PropTypes.func.isRequired,
+        repos: PropTypes.array.isRequired,
     }
 
     componentDidMount() {
         this.props.getUserInfo(this.props.match.params.login);
+        this.props.getUserRepo(this.props.match.params.login);
     }
 
     render() {
         const { name, avatar_url, location, bio, company, blog, login, html_url, followers, following, public_repos, public_gists, hireable
         } = this.props.user;
-        const { loading } = this.props;
+        const { repos, loading } = this.props;
 
         if (loading) return <Spinner />
         return (
@@ -44,12 +48,15 @@ export class User extends Component {
                         </ul>
                     </div>
                 </div>
-                <div className ='card text-center'>
-                            <div className='badge badge-primary'>Followers:{followers}</div>
-                            <div className='badge badge-success'>Following:{following}</div>
-                            <div className='badge badge-danger'>Public Repos:{public_repos}</div>
-                            <div className='badge badge-dark'>Public Gists:{public_gists}</div>
+                <div className='card text-center'>
+                    <div className='badge badge-primary'>Followers:{followers}</div>
+                    <div className='badge badge-success'>Following:{following}</div>
+                    <div className='badge badge-danger'>Public Repos:{public_repos}</div>
+                    <div className='badge badge-dark'>Public Gists:{public_gists}</div>
                 </div>
+                <Repos repos={repos} />
+
+
             </Fragment>
         )
     }
