@@ -1,15 +1,19 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useEffect, Fragment, useContext } from 'react'
 import Spinner from '../layout/Spinner/Spinner';
 import Repos from '../Repos/Repos';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import GitHubContext from '../../context/gitHub/GitHubContext'
 
-const User = ({ user, loading, getUser, getRepos, repos, match, getUserInfo, getUserRepo }) => {
+const User = ({ match }) => {
+    const githubContext = useContext(GitHubContext);
+
     useEffect(() => {
-        getUserInfo(match.params.login);
+        getUser(match.params.login);
         getUserRepo(match.params.login)
         // eslint-disable-next-line
     }, []);
+
+    const { getUser, user, loading, repos, getUserRepo } = githubContext;
 
 
     const { name, avatar_url, location, bio, company, blog, login, html_url, followers, following, public_repos, public_gists, hireable
@@ -28,7 +32,7 @@ const User = ({ user, loading, getUser, getRepos, repos, match, getUserInfo, get
                 </div>
                 <div>
                     {bio && <Fragment><h3>About Me</h3><p>{bio}</p></Fragment>}
-                    <a href={html_url} className='btn btn-dark my-1' target='_blank'>Visit Github Profile </a>
+                    <a href={html_url} className='btn btn-dark my-1'>Visit Github Profile </a>
                     <ul>
                         <li>{login}</li>
                         {company && <Fragment>
@@ -51,12 +55,5 @@ const User = ({ user, loading, getUser, getRepos, repos, match, getUserInfo, get
     )
 }
 
-User.propTypes = {
-    loading: PropTypes.bool,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired,
-    getUserRepo: PropTypes.func.isRequired,
-    repos: PropTypes.array.isRequired,
-}
 
 export default User
